@@ -13,7 +13,7 @@ def joke():
         jokes = []
         for joke in jokes_list:
             jokes.append(joke.strip())
-            return jokes
+            return random.choice(jokes)
 
 def answer():
     try:
@@ -25,6 +25,7 @@ def answer():
         return {}
 
 def answer_question(question):
+    temporary_answer = answer()
     question = answer()
     question = question.lower()
     for q in answer:

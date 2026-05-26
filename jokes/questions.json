@@ -1,6 +1,31 @@
 {
-    
-  "What inputs does the system monitor?" : "It monitors any signals, states, or variables that are relevant to its decision rules."
-   
+  "What inputs does the system monitor?": "It monitors any signals, states, or variables that are relevant to its decision rules.",
+
+  "How do you decide when to take action?": "I evaluate whether one or more predefined conditions are currently satisfied.",
   
+  "What does a condition represent?": "A condition is a rule that matches a particular combination of inputs or states.",
+  
+  "How do you know if a condition is active?": "A condition is active when its rule evaluates to true against current data.",
+  
+  "What happens when a condition changes state?": "I may trigger a transition, an output, or a change in behavior.",
+  
+  "How are conditions organized?": "They are typically grouped by priority, category, or functional role.",
+  
+  "What is the fallback state?": "The fallback state is the default behavior when no specific condition applies.",
+  
+  "How is the rule set updated?": "The rule set is updated by changing the condition definitions or their thresholds.",
+  
+  "What if inputs are ambiguous?": "I handle ambiguity by using additional conditions or defaulting to a safe response.",
+  
+  "How do you avoid reacting too quickly?": "I use timing controls, hysteresis, or state persistence to stabilize responses.",
+  
+  "Can conditions be enabled or disabled?": "Yes, individual conditions can usually be turned on or off in configuration.",
+  
+  "How do you interpret the current state?": "I map input values to condition evaluations and summarize which rules are true.",
+  
+  "What does it mean to prioritize conditions?": "It means choosing which condition's action should run first when multiple are true.",
+  
+  "How do you verify condition behavior?": "I verify it through testing with representative inputs and observing the outputs.",
+  
+  "What defines a safe response?": "A safe response avoids harm or incorrect operation when no clear condition applies."
 }
