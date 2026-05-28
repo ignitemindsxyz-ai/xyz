@@ -1,6 +1,7 @@
 def add_user_name():
     user_name = []
     
+def conversation():
     user_name = input("What is your name? : ")
     if not user_name :
         print("Name can not be empty.")
@@ -18,6 +19,7 @@ def add_user_name():
             print("Sorry to hear that, I hope it gets better soon")
 
         elif mood_answer == "yes":
-            print("Great, how can I help you?")
+            print("Great, how can I help you?")        
 
 add_user_name()
+conversation()
