@@ -4,34 +4,25 @@ conn   = mysql.connector.connect(host='localhost', user='root', password='',)
 
 cursor = conn.cursor()
 
-
-# List all databases:
-
-cursor.execute('SHOW DATABASES')
-
-for (db,) in cursor.fetchall(): print(f'  {db}')
-
 cursor.execute('USE school_db')
-
-# Inspect table structure:
-
-cursor.execute('DESCRIBE students')
 
 for col in cursor.fetchall():
 
     print(f'  {col[0]:20} {col[1]:20} Null:{col[2]}')
 
 while True:
-    print("===== Stusent Database =====")
+    print("===== School Database =====")
     print("1. Add student")
     print("2. Delete student")
     print("3. Update student")
     print("4. View students")
-    print("5. Exit")
+    print("5. Add in courses")
+    print("6. Add in enrollments")
+    print("7. Exit")
     action = input("What would you like to do?(Default : 1): ").strip()
 
     if action == "1" or action == "":
-        student_name = input("Name? : ")
+        student_name = input("Name? : ").title()
         student_email = input("E-mail adderss? : ")
         student_age = input("Age? : ")
         student_course = input("Course? : ")
@@ -89,8 +80,24 @@ while True:
             )
 
     elif action == "5":
+        student_course = input("Course? : ")
+        student_credits = input("Total Credits : ")
+        student_instructor = input("Instructor? : ").title()
+
+        sql = "INSERT INTO courses (course, credits, instructor) VALUES (%s, %s, %s)"
+        values = (student_course, student_credits, student_instructor)
+
+        cursor.execute(sql, values)
+        conn.commit()
+
+    
+
+    elif action == "7":
         print("Exiting.....")
         break
+
+    else:
+        print("Invalid option.")
 
 
 cursor.close()
