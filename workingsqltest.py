@@ -16,7 +16,7 @@ while True:
     print("2. Delete student")
     print("3. Update student")
     print("4. View students")
-    print("5. Add in courses")
+    print("5. Add courses")
     print("6. Add in enrollments")
     print("7. Exit")
     action = input("What would you like to do?(Default : 1): ").strip()
@@ -25,11 +25,10 @@ while True:
         student_name = input("Name? : ").title()
         student_email = input("E-mail adderss? : ")
         student_age = input("Age? : ")
-        student_course = input("Course? : ")
         student_grade = input("Grade? : ")
 
-        sql = "INSERT INTO students(name, email, age, course, grade) VALUES (%s, %s, %s, %s, %s)"
-        values = (student_name, student_email, student_age, student_course, student_grade)
+        sql = "INSERT INTO students(name, email, age, grade) VALUES (%s, %s, %s, %s)"
+        values = (student_name, student_email, student_age, student_grade)
 
         cursor.execute(sql, values)
         conn.commit()
@@ -90,7 +89,14 @@ while True:
         cursor.execute(sql, values)
         conn.commit()
 
-    
+    elif action == "6":
+        view = input("Which student would you like to enroll?(ID) : ")
+        select_course = input("And in which course?(1 for Science, 2 for Management) : ").strip().lower()
+        sql = "INSERT INTO enrollments (student_id, course_id) VALUES (%s, %s)"
+        values = (view, select_course)
+
+        cursor.execute(sql, values)
+        conn.commit()
 
     elif action == "7":
         print("Exiting.....")
