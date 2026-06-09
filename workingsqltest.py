@@ -6,10 +6,6 @@ cursor = conn.cursor()
 
 cursor.execute('USE school_db')
 
-for col in cursor.fetchall():
-
-    print(f'  {col[0]:20} {col[1]:20} Null:{col[2]}')
-
 while True:
     print("===== School Database =====")
     print("1. Add student")
