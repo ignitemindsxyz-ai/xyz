@@ -1,4 +1,11 @@
 import mysql.connector
+import tkinter as tk
+from tkinter import messagebox,ttk
+
+root = tk.Tk()
+root.title("Simple Notes")
+root.geometry('500x600')
+root.configure(bg="#252823")
 
 conn = mysql.connector.connect(
     host = "localhost",
@@ -9,74 +16,98 @@ conn = mysql.connector.connect(
 
 cursor = conn.cursor()
 
-while True:
-    print()
-    print("===== Notes =====")
-    print("1. Add note")
-    print("2. View note")
-    print("3. Delete note")
-    print("4. Update note")
-    print("5. Search by cateogry")
-    print("6. Exit")
 
-    choice = input("What would you like to do?(Default = 1) : ")
+def add_note(): 
+    title = title_entry.get()
+    body = body_entry.get("1.0", tk.END).strip()
+    category = category_entry.get()
 
-    if choice == "1" or choice == "":
-        title = input("Title(Enter to leave empty): ")
-        body = input("Body : ").strip()
-        category = input("Which category? : ")
+    sql = "INSERT INTO note (title, body, category) VALUES (%s, %s, %s)"
+    values = (title, body, category)
+    cursor.execute(sql, values)
+    conn.commit()
 
-        sql = "INSERT INTO note (title, body, category) VALUES (%s, %s, %s)"
-        values = (title, body, category)
-        cursor.execute(sql, values)
-        conn.commit()
+    messagebox.showinfo("Success", "Note added")
+    clear_fields()
+    view_note()
 
-    elif choice == "2":
-        cursor.execute("SELECT * FROM note")
-        for column in cursor.fetchall():
-            print("")
-            print(f"ID : {column[0]} \nTitle : {column[1]}\nBody : {column[2]}")
-            print("")
+def view_note():
+    notes_list.delete(*notes_list.get_children())
 
-    elif choice == "3":
-        del_note = input("Which note will be deleted?(id) : ")
+    cursor.execute(
+        "SELECT id, title, body, category FROM note"
+    )
 
-        sql = "SELECT * FROM note WHERE id=%s"
-        cursor.execute(sql, (del_note,))
-        conn.commit()
+    for row in cursor.fetchall():
+        notes_list.insert("", tk.END, values=row)
 
-    elif choice == "4":
-        update_note = input("Which note will be updated?(ID) : ")
-        cursor.execute("SELECT * FROM note WHERE id=%s", (update_note,))
+def delete_note():
+    note_id = id_entry.get()
 
-        notes = cursor.fetchone()
-        if notes:
-            print(notes[1])
-            print(notes[2])
-            print()
-            new_title = input("New title : ")
-            new_body = input("New body : ")
+    if not note_id:
+        messagebox.showerror("Error", "Enter Note ID")
+        return
 
-            cursor.execute(
-                "UPDATE note SET title=%s, body=%s WHERE id=%s",
-                (new_title, new_body, update_note)
-            )
-            conn.commit()
+    cursor.execute(
+        "DELETE FROM note WHERE id=%s",
+        (note_id,)
+    )
+    conn.commit()
+    messagebox.showinfo("Note deleted")
+    view_note()
 
-        else:
-            print("Invalid ID")
+def update_note():
+    note_id = id_entry.get()
 
-    elif choice == "5":
-        cat_search = input("Which category? : ")
-        cursor.execute("SELECT id, title, body, category FROM note WHERE category=%s", (cat_search,))
-        notes = cursor.fetchall()
-        if notes:
-            for note in notes:
-                print(f"\nNote ID : {note[0]}")
-                print(f"Title : {note[1]}")
-                print(f"Body : {note[2]}")
-                print(f"Category : {note[3]}")
+    cursor.execute(
+        """
+        UPDATE note
+        SET title=%s, body=%s, category=%s
+        WHERE id=%s
+        """,
+        (
+            title_entry.get(),
+            body_text.get("1.0", tk.END).strip(),
+            category_entry.get(),
+            note_id
+        )
+    )
 
-    elif choice == "6":
-        print("Good bye!")
-        break
+    conn.commit()
+
+    messagebox.showinfo("Note updated")
+    view_note()
+
+def search_note():
+    category = category_entry.get()
+
+    notes_list.delete(*notes_list.get_children())
+
+    cursor.execute(
+        """
+        SELECT id, title, category
+        FROM note
+        WHERE category=%s
+        """,
+        (category,)
+    )
+
+    for row in cursor.fetchall():
+        notes_list.insert("", tk.END, values=row)
+
+def select_note(event):
+    selected = notes_list.focus()
+
+    if not selected:
+        return
+    
+    values = notes_list.item(selected, "values")
+
+    note_id = values[0]
+
+    cursor.execute(
+        "SELECT * FROM note WHERE id=%s"
+        (note_id)
+    )
+
+    
